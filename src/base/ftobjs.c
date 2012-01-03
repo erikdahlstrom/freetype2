@@ -4533,7 +4533,9 @@
      */
     {
       FT_UInt      m, n;
-      const char*  driver_name[] = { "type42", NULL };
+      const char*  driver_name[2];
+	  driver_name[0] = "type42";
+	  driver_name[1] = NULL;
 
 
       for ( m = 0;
