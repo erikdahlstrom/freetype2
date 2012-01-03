@@ -48,6 +48,48 @@ FT_BEGIN_HEADER
 
   } FT_RFork_Ref;
 
+#ifdef FT_CONFIG_OPTION_GUESSING_EMBEDDED_RFORK
+  typedef FT_Error
+  (*raccess_guess_func)( FT_Library  library,
+                         FT_Stream   stream,
+                         char       *base_file_name,
+                         char      **result_file_name,
+                         FT_Long    *result_offset );
+
+  typedef enum  FT_RFork_Rule_ {
+    FT_RFork_Rule_invalid = -2,
+    FT_RFork_Rule_uknown, /* -1 */
+    FT_RFork_Rule_apple_double,
+    FT_RFork_Rule_apple_single,
+    FT_RFork_Rule_darwin_ufs_export,
+    FT_RFork_Rule_darwin_newvfs,
+    FT_RFork_Rule_darwin_hfsplus,
+    FT_RFork_Rule_vfat,
+    FT_RFork_Rule_linux_cap,
+    FT_RFork_Rule_linux_double,
+    FT_RFork_Rule_linux_netatalk
+  } FT_RFork_Rule;
+
+  /* For fast translation between rule index and rule type,
+   * the macros FT_RFORK_xxx should be kept consistent with
+   * the raccess_guess_funcs table
+   */
+  typedef struct raccess_guess_rec_ {
+    raccess_guess_func  func;
+    FT_RFork_Rule       type;
+  } raccess_guess_rec;
+
+#ifndef FT_CONFIG_OPTION_PIC
+# define CONST_FT_GUESS_REC_ARRAY(name,type) const type name[] = {
+# define CONST_FT_GUESS_REC_ENTRY(func,type) { func, type },
+# define CONST_FT_GUESS_REC_END(func,type)   { func, type } };
+#else /* FT_CONFIG_OPTION_PIC */
+# define CONST_FT_GUESS_REC_ARRAY(name,type) void FT_Init_##name (type *storage) { type *local = storage; int i=0;
+# define CONST_FT_GUESS_REC_ENTRY(funci,typei) local[i].func = funci; local[i].type = typei; i++;
+# define CONST_FT_GUESS_REC_END(funci,typei)   local[i].func = funci; local[i].type = typei; i++; }
+#endif /* FT_CONFIG_OPTION_PIC */
+
+#endif /* FT_CONFIG_OPTION_GUESSING_EMBEDDED_RFORK */
 
   /*************************************************************************/
   /*                                                                       */

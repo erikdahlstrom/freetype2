@@ -27,6 +27,9 @@
   void FT_Init_Class_ft_outline_glyph_class(FT_Glyph_Class*);
   void FT_Init_Class_ft_bitmap_glyph_class(FT_Glyph_Class*);
 
+  /* forward declaration of PIC init function from ftrfork.c */
+  void FT_Init_raccess_guess_table(raccess_guess_rec*);
+
   /* forward declaration of PIC init functions from ftinit.c */
   FT_Error ft_create_default_module_classes(FT_Library);
   void ft_destroy_default_module_classes(FT_Library);
@@ -69,6 +72,7 @@
     /* initialize pointer table - this is how the module usually expects this data */
     FT_Init_Class_ft_outline_glyph_class(&container->ft_outline_glyph_class);
     FT_Init_Class_ft_bitmap_glyph_class(&container->ft_bitmap_glyph_class);
+    FT_Init_raccess_guess_table((raccess_guess_rec*)&container->raccess_guess_table);
 
 Exit:
     if(error)
